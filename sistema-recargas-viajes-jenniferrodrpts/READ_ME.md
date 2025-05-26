@@ -1,110 +1,128 @@
-Base de datos: sistema_recargas_viajes__jenniferrodrpts
+Sistema de Gestión para Transporte Público: Base de Datos de Recargas y Viajes
+Base de datos: sistema_recargas_viajes_grupito_bd
 
-## 🎯 Objetivo del Proyecto
+Introducción
+Este proyecto aborda el diseño y ampliación de una base de datos para un sistema de transporte público que gestiona tarjetas de usuario, recargas monetarias, viajes, dispositivos de validación, auditoría de tarjetas, promociones y el registro de incidencias operativas.
+El propósito es proveer un sistema robusto que permita el análisis profundo del comportamiento de los usuarios, la eficacia de promociones y el monitoreo del funcionamiento operativo, contribuyendo a la optimización continua del servicio.
 
-El objetivo principal de este proyecto es diseñar y extender una base de datos para un sistema de transporte que administre tarjetas de usuario, recargas, viajes, dispositivos de validación, auditoría de tarjetas, promociones, y mejoras como el registro de incidencias.
-Se busca analizar el comportamiento de los usuarios, el uso de promociones, y el funcionamiento del sistema de validaciones, además de detectar fallos operativos o incidencias.
+Objetivos
+Diseñar un modelo de datos integral que cubra las necesidades funcionales y de análisis del sistema de transporte.
 
-## 🧩 Modelo Entidad-Relación (ER)
+Incorporar funcionalidades de auditoría para seguimiento del estado y uso de tarjetas.
 
-| Tabla                | Atributos Clave                                             | Relaciones y Descripción                                                                 |
-|----------------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| **usuarios**         | `usuario_id` (PK)                                           | Un usuario puede tener varias tarjetas.                                                  |
-| **tarjetas**         | `tarjeta_id` (PK), `usuario_id` (FK)                        | Relacionada con usuarios. Puede tener muchas recargas y muchos viajes.                   |
-| **recargas**         | `recarga_id` (PK), `tarjeta_id` (FK), `promocion_id` (FK)   | Relacionada con tarjetas y promociones.                                                  |
-| **promociones**      | `promocion_id` (PK)                                         | Una promoción puede estar asociada a varias recargas.                                    |
-| **viajes**           | `viaje_id` (PK), `tarjeta_id` (FK), `estacion_abordaje_id` (FK), `dispositivo_id` (FK) | Relacionada con tarjetas, estaciones y dispositivos.                          |
-| **estaciones**       | `estacion_id` (PK)                                          | Una estación puede tener muchos viajes como punto de abordaje.                          |
-| **dispositivos**     | `dispositivo_id` (PK)                                       | Cada dispositivo puede registrar muchos viajes.                                          |
-| **auditoria_tarjetas** | `auditoria_id` (PK), `tarjeta_id` (FK)                   | Registra los cambios de estado de cada tarjeta.                                          |
-| **incidencias**      | `incidencia_id` (PK), `viaje_id` (FK)                       | Relacionada con viajes. Permite registrar eventos como fallas o retrasos.                |
+Integrar promociones para incentivar recargas y fomentar el uso del sistema.
 
+Implementar el registro y seguimiento de incidencias para detectar y corregir fallas.
 
+Facilitar la obtención de reportes detallados para análisis de comportamiento y rendimiento.
 
-## 🛠️ Descripción de Mejoras a la Base
-Se propusieron e implementaron tres mejoras sobre el modelo base:
+Arquitectura del Modelo de Datos
+El sistema está construido a partir de las siguientes entidades principales, cada una con funciones específicas y relaciones definidas para mantener integridad y coherencia:
 
-Auditoría de tarjetas:
-Se agregó una tabla auditoria_tarjetas para llevar un historial de cambios de estado de las tarjetas (por ejemplo, de activa a bloqueada), con fecha de cambio.
+Entidades y Relaciones Clave
+Entidad	Clave Primaria	Relaciones	Función Principal
+Usuarios	usuario_id	Uno a muchos con tarjetas	Representa a los usuarios del sistema
+Tarjetas	tarjeta_id	Relacionada a un usuario; uno a muchos con recargas y viajes	Identificación para el uso del sistema
+Recargas	recarga_id	Vinculada a tarjetas y promociones	Registro de depósitos de saldo en tarjetas
+Promociones	promocion_id	Uno a muchos con recargas	Incentivos y bonos aplicados a recargas
+Viajes	viaje_id	Asociado a tarjeta, estación y dispositivo	Registro de viajes validados
+Estaciones	estacion_id	Uno a muchos con viajes	Puntos de abordaje y destino
+Dispositivos	dispositivo_id	Uno a muchos con viajes	Terminales de validación (puntos físicos o móviles)
+Auditoría de tarjetas	auditoria_id	Vinculada a tarjetas	Historial de cambios de estado para monitoreo
+Incidencias	incidencia_id	Asociada a viajes	Registro de eventos anómalos o fallos en el servicio
 
-Promociones en recargas:
-Se creó la tabla promociones y se modificó la tabla recargas para incluir el campo promocion_id, permitiendo así analizar el impacto de promociones en el monto recargado.
+Descripción Detallada de las Tablas
+Usuarios
+Contiene los datos de los usuarios que poseen una o más tarjetas para acceder al sistema de transporte.
 
-Dispositivos e incidencias:
+Tarjetas
+Identifica las tarjetas asignadas a usuarios, permitiendo gestionar su estado y relacionarlas con recargas y viajes.
 
-Se creó la tabla dispositivos (tipo, ubicación) y se asoció a viajes, para registrar dónde se validó cada viaje.
+Recargas
+Guarda el historial de recargas realizadas, incluyendo datos de monto, fecha y la promoción que se haya aplicado.
 
-Se agregó una mejora adicional con la tabla incidencias, que permite registrar eventos negativos o fallas ocurridas en viajes (como retrasos o errores de validación).
+Promociones
+Lista las promociones disponibles para aplicar incentivos a las recargas, facilitando campañas de marketing y fidelización.
 
-🕵️ Explicación de Auditorías
-La auditoría de tarjetas permite:
+Viajes
+Registra cada viaje efectuado por los usuarios, indicando la tarjeta utilizada, estación de abordaje y el dispositivo de validación empleado.
 
-Registrar cada vez que una tarjeta cambia de estado.
+Estaciones
+Describe los puntos físicos o virtuales donde los usuarios abordan el sistema, siendo clave para análisis geográficos y operativos.
 
-Analizar patrones de cambios por mes o por tarjeta.
+Dispositivos
+Detalle de los dispositivos (lectores físicos o apps móviles) usados para validar viajes, con su tipo y ubicación para trazabilidad.
 
-Identificar posibles fraudes, errores operativos, o mal uso de las tarjetas.
+Auditoría de tarjetas
+Mantiene un registro cronológico de los cambios en el estado de cada tarjeta (activo, bloqueado, etc.), fundamental para seguridad y control.
 
-Este historial es esencial para evaluar la estabilidad del sistema y la experiencia del usuario.
+Incidencias
+Permite registrar y clasificar eventos negativos, como errores de validación, retrasos o problemas técnicos durante el viaje.
 
-## 📜 Explicación de Scripts
+Innovaciones y Mejoras Implementadas
+Este proyecto incorpora varias mejoras que fortalecen la base de datos inicial:
 
-1. Script de estructura
-Crea las siguientes tablas adicionales:
+Historial de auditoría:
+Se implementó una tabla dedicada para registrar cualquier cambio en el estado de las tarjetas, lo que facilita la detección temprana de anomalías y mejora la transparencia en la gestión.
 
-auditoria_tarjetas (relacionada con tarjetas)
+Sistema de promociones:
+Se creó un módulo para incluir promociones en las recargas, permitiendo realizar análisis del impacto y efectividad de incentivos sobre el comportamiento del usuario.
 
-promociones (relacionada con recargas)
+Gestión avanzada de dispositivos:
+Se añadió la gestión de dispositivos de validación, detallando el tipo (físico o móvil) y su ubicación, lo que permite análisis operativos y detección de posibles fallas en terminales específicas.
 
-dispositivos (relacionada con viajes)
+Registro de incidencias:
+La inclusión de una tabla para incidencias permite documentar eventos problemáticos durante los viajes, facilitando acciones correctivas y mejoras continuas.
 
-incidencias (relacionada con viajes)
+Casos de Uso Clave
+Monitoreo de cambios en tarjetas:
+Permite supervisar cuándo y cómo cambian los estados de las tarjetas, ayudando a identificar posibles fraudes o errores operativos.
 
-Y modifica las tablas recargas y viajes para soportar promociones y validación por dispositivos.
+Evaluación de promociones:
+Analiza cómo las promociones afectan la frecuencia y monto de recargas, optimizando campañas de fidelización.
 
-2. Script de datos
-Agrega datos de prueba en las nuevas tablas:
+Control de validaciones:
+Verifica la correcta validación de viajes, identificando viajes no validados o problemas con dispositivos específicos.
 
-Cambios de estado en tarjetas.
+Análisis de incidencias:
+Clasifica y reporta las incidencias por tipo y ubicación para implementar mejoras focalizadas.
 
-Promociones y asociación a recargas.
+Scripts SQL Incluidos
+1. Creación y Modificación de Estructuras
+Define tablas nuevas (auditoría, promociones, dispositivos, incidencias) y modifica tablas existentes para integrar las nuevas funcionalidades.
 
-Dispositivos registrados y asignados a viajes.
+2. Población de Datos de Prueba
+Inserta registros de prueba en las nuevas tablas y actualiza fechas en tablas existentes para facilitar análisis de datos recientes (principalmente en abril 2025).
 
-Incidencias ocurridas en ciertos viajes.
+3. Consultas Analíticas
+Incluye consultas complejas para extraer información útil como:
 
-También se actualizan fechas clave para análisis posteriores (viajes en abril 2025, recargas recientes).
+Cambios mensuales en el estado de tarjetas.
 
-3. Script de consultas
-Consulta distintos aspectos del sistema:
+Ranking de tarjetas con más modificaciones.
 
-Cambios mensuales en tarjetas (auditoría).
+Volumen de recargas por tipo de promoción.
 
-Top 5 tarjetas con más cambios de estado.
+Viajes sin validación o validados con dispositivos móviles.
 
-Recargas con su promoción.
+Identificación del dispositivo más utilizado.
 
-Total recargado por tipo de promoción en últimos 3 meses.
+Estadísticas y detalles de incidencias.
 
-Promociones con la palabra "bonus".
+4. Actualización y Auditoría Continua
+Actualiza datos históricos para mantener la base actualizada y ejecuta consultas para validar el correcto funcionamiento del sistema.
 
-Viajes sin dispositivo de validación.
+Cómo Empezar
+Para desplegar y probar el sistema, sigue estos pasos:
 
-Validaciones hechas por dispositivos móviles en abril 2025.
+Ejecuta el script de estructura para crear y modificar tablas.
 
-Dispositivo más usado en validaciones.
+Inserta datos con el script de datos de prueba.
 
-Cantidad de incidencias por tipo.
+Usa las consultas para verificar y analizar el comportamiento del sistema.
 
-Incidencias por estación de abordaje.
+Repite la auditoría periódicamente con el script de actualización para mantener datos actualizados.
 
-Incidencias con usuario involucrado.
+Conclusión
+Este sistema de base de datos es una solución completa y escalable para la gestión de un sistema de transporte público moderno. Permite no solo la operación diaria, sino también la generación de información clave para la toma de decisiones estratégicas, mejorando la calidad del servicio y la satisfacción del usuario.
 
-4. Script de auditoría y actualización
-Este script:
-
-Actualiza fechas antiguas de auditoría al último año.
-
-Asegura que las recargas y viajes tengan fechas recientes (abril 2025).
-
-Repite las principales consultas de auditoría para mostrar datos actualizados.
