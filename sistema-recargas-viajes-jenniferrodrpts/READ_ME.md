@@ -1,6 +1,6 @@
 # Sistema de Gestión para Transporte Público: Base de Datos de Recargas y Viajes
 
-**Base de datos:** `sistema_recargas_viajes_grupito_bd`
+**Base de datos:** `sistema_recargas_viajes_grupito`
 
 ---
 
