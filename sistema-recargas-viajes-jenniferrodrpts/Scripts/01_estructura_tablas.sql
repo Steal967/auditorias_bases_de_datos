@@ -1,5 +1,5 @@
 
-create database sistema_recargas_viajes__jenniferrodrpts template sistema_recargas_viajes_base;
+create database sistema_recargas_viajes_grupito_bd template sistema_recargas_viajes_base;
 
 
 SELECT * FROM tarjetas;
